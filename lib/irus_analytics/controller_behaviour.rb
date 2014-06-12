@@ -6,6 +6,7 @@ module IrusAnalytics
          logger = Logger.new(STDOUT) if logger.nil? 
          logger.warn("send_analytics exited:Request object is nil.")
       else
+
         # Get Request data
         client_ip = request.remote_ip if request.respond_to?(:remote_ip)
         user_agent = request.user_agent if request.respond_to?(:user_agent)

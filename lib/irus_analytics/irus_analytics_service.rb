@@ -1,13 +1,25 @@
 require 'openurl'
+require 'ruby-debug'
 
 module IrusAnalytics
   class IrusAnalyticsService
+     attr_accessor :irus_server_address
+
+     def initialize(irus_server_address)
+      @irus_server_address = irus_server_address
+    end
+
      def send_analytics(params = {})
-       default_params = {date_stamp: "", client_ip_address: "",  user_agent: "", item_oai_identifier: "", file_url: "", http_referer: "", source_repository: ""}
+
+      if @irus_server_address.to_s.empty? 
+        raise ArgumentError, "Cannot send analytics: Missing Irus server address"
+      end
+
+      default_params = {date_stamp: "", client_ip_address: "",  user_agent: "", item_oai_identifier: "", file_url: "", http_referer: "", source_repository: ""}
        params = default_params.merge(params)
 
-      if !check_mandatory_params(params).empty?
-        raise ArgumentError, "Missing the following required params: #{@missing_fields}"
+      if missing_mandatory_params?(params)
+        raise ArgumentError, "Missing the following required params: #{@missing_params}"
       end
 
       tracker_context_object_builder.set_event_datestamp(params[:date_stamp])
@@ -28,10 +40,10 @@ module IrusAnalytics
      end
 
      # At present, all the params, are mandatory...
-     def check_mandatory_params(params)
-       missing_fields = []
-       params.each_pair { |key,value| missing_fields << key if value.empty?  }
-       missing_fields
+     def missing_mandatory_params?(params)
+       @missing_params = []
+       params.each_pair { |key,value| @missing_fields << key if value.to_s.empty?  }
+       !@missing_params.empty? 
      end
 
      def tracker_context_object_builder

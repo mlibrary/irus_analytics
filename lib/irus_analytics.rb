@@ -1,14 +1,33 @@
 require "irus_analytics/version"
+require "irus_analytics/controller_behaviour"
+require "irus_analytics/irus_analytics_service"
+require "irus_analytics/tracker_context_object_builder"
+require "irus_analytics/user_agent_filter"
 
 module IrusAnalytics
-   class << self
-    attr_accessor :configuration 
+  class << self
+    attr_writer :configuration 
+  end
+
+  def self.configuration
+    @configuration ||= Configuration.new
+  end
+
+  def self.reset
+    @configuration = Configuration.new
   end
 
   def self.configure
-    self.configuration ||= Configuration.new
-    yield(configuration)
-  end    
+    yeild(configuration)
+  end
+
+  def self.root
+    @root ||= File.expand_path(File.dirname(File.dirname(__FILE__)))
+  end
+
+  def self.config
+    File.join root, "config" 
+  end
 
   class Configuration
     attr_accessor :source_repository, :irus_server_address
@@ -19,12 +38,5 @@ module IrusAnalytics
     end
   end
 
-  def self.root
-    @root ||= File.expand_path(File.dirname(File.dirname(__FILE__)))
-  end
-
-  def self.config
-    File.join root, "config" 
-  end 
-
 end
+
