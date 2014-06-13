@@ -15,7 +15,7 @@ module IrusAnalytics
       end
 
       default_params = {date_stamp: "", client_ip_address: "",  user_agent: "", item_oai_identifier: "", file_url: "", http_referer: "", source_repository: ""}
-       params = default_params.merge(params)
+      params = default_params.merge(params)
 
       if missing_mandatory_params?(params)
         raise ArgumentError, "Missing the following required params: #{@missing_params}"
