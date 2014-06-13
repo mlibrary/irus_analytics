@@ -10,7 +10,6 @@ module IrusAnalytics
     end
 
      def send_analytics(params = {})
-
       if @irus_server_address.to_s.empty? 
         raise ArgumentError, "Cannot send analytics: Missing Irus server address"
       end
@@ -52,10 +51,6 @@ module IrusAnalytics
 
      def  openurl_link_resolver(context_object)
        OpenURL::Transport.new(irus_server_address, context_object)
-     end
-
-     def irus_server_address
-       IrusAnalytics.configuration.irus_server_address
      end
 
   end 
