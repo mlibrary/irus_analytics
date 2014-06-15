@@ -1,4 +1,4 @@
-require 'spec_helper'
+	require 'spec_helper'
 
 class TestClass
   include IrusAnalytics::Controller::AnalyticsBehaviour
@@ -20,11 +20,14 @@ describe IrusAnalytics::Controller::AnalyticsBehaviour do
        allow(@test_class).to receive(:source_repository_name) .and_return("hydra.hull.ac.uk")
        allow(@test_class).to receive(:irus_server_address) .and_return("irus-server-address.org")
        allow(@test_class).to receive(:rails_environment) .and_return("production")
+       params = { date_stamp: date_time, client_ip_address: "127.0.0.1", user_agent: "Test user agent",item_oai_identifier: "test:123", 
+                  file_url: "http://localhost:3000/test", http_referer: "http://localhost:3000",  source_repository: "hydra.hull.ac.uk" }
 
-       expect(@test_class).to receive(:send_irus_analytics).with(date_stamp:date_time , client_ip_address:"127.0.0.1", user_agent: "Test user agent", item_oai_identifier: "test:123", file_url: "http://localhost:3000/test", 
-                                                                                http_referer:  "http://localhost:3000",  source_repository: "hydra.hull.ac.uk")
+       allow(Resque).to receive(:enqueue) .and_return(nil)
+       # Not testing Resque ability to queue...
+       expect(Resque).to receive(:enqueue).with(IrusAnalytics::IrusClient, "irus-server-address.org", params )
 
-        @test_class.send_analytics       
+       @test_class.send_analytics       
     end
 
   end  

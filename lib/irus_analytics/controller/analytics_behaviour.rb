@@ -1,4 +1,5 @@
 require 'logger'
+require 'resque'
 
 module IrusAnalytics
   module Controller
@@ -9,7 +10,7 @@ module IrusAnalytics
 
         # Retrieve required params from the request
         if request.nil?
-           logger.warn("send_analytics exited:Request object is nil.")
+           logger.warn("IrusAnalytics::Controller::AnalyticsBehaviour.send_analytics exited: Request object is nil.")
         else
 
           # Get Request data
@@ -25,23 +26,24 @@ module IrusAnalytics
           # These following should defined in the controller class including this module
           identifier = self.item_identifier if self.respond_to?(:item_identifier)
 
-          # In development and test Rails environment without irus_server_address we log in debug        
-          if irus_server_address.nil? && (rails_environment == "development" || rails_environment == "test")
-            logger.debug("IrusAnalytics::ControllerBehaviour - send_irus_anlaytics(data_stamp: #{datetime}, client_ip_address: #{client_ip}, item_oai_identifier: #{identifier}, file_url: #{file_url}, http_referer: #{referer}, source_repository: #{source_repository}")
-          else
-            send_irus_analytics(date_stamp: datetime, client_ip_address:client_ip, user_agent: user_agent, item_oai_identifier: identifier, file_url: file_url, 
-                                                                              http_referer: referer,  source_repository: source_repository)      
-          end
+          analytics_params = { date_stamp: datetime, client_ip_address: client_ip, user_agent: user_agent, item_oai_identifier: identifier, file_url: file_url, 
+                                 http_referer: referer,  source_repository: source_repository }
 
+          if irus_server_address.nil? 
+            # In development and test Rails environment without irus_server_address we log in debug  
+            if rails_environment == "development" || rails_environment == "test"
+              logger.debug("IrusAnalytics::ControllerBehaviour - send_irus_analytics with params #{analytics_params}")
+            else
+              logger.error("IrusAnalytics::Controller::AnalyticsBehaviour.send_analytics exited: Irus Server address is not set.")
+            end  
+          else
+            Resque.enqueue(IrusClient, irus_server_address, analytics_params)
+          end
         end
 
       end
 
       private
-
-      def send_irus_analytics(params)
-          irus_analytics_service.send_analytics(params)
-      end
 
       # Returns UTC iso8601 version of Datetime
       def datetime_stamp
@@ -56,10 +58,6 @@ module IrusAnalytics
         IrusAnalytics.configuration.irus_server_address
       end
 
-      def irus_analytics_service
-        IrusAnalytics::IrusAnalyticsService.new(irus_server_address)
-      end
-      
       def rails_environment
         unless Rails.nil?
           return Rails.env.to_s 
