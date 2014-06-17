@@ -7,6 +7,7 @@ module IrusAnalytics
 
      def initialize(irus_server_address)
       @irus_server_address = irus_server_address
+      @missing_params = []
     end
 
      def send_analytics(params = {})
@@ -31,7 +32,7 @@ module IrusAnalytics
 
       transport = openurl_link_resolver(tracker_context_object_builder.context_object)
       transport.get 
-      
+
       if transport.code != "200"
         raise "Unexpected response from IRUS server"
       end
@@ -40,9 +41,8 @@ module IrusAnalytics
 
      # At present, all the params, are mandatory...
      def missing_mandatory_params?(params)
-       @missing_params = []
        params.each_pair { |key,value| @missing_fields << key if value.to_s.empty?  }
-       !@missing_params.empty? 
+       return !@missing_params.empty? 
      end
 
      def tracker_context_object_builder
@@ -50,7 +50,7 @@ module IrusAnalytics
      end
 
      def  openurl_link_resolver(context_object)
-       OpenURL::Transport.new(irus_server_address, context_object)
+       OpenURL::Transport.new(@irus_server_address, context_object)
      end
 
   end 

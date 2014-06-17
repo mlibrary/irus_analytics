@@ -10,4 +10,14 @@ describe IrusAnalytics::IrusClient do
     # subject.class.perform("irus-server", test_params)
     end
   end
+  
+  # Required due to Resque returning stringyfield hash keys
+  describe ".symbolize_keys" do
+     it "takes a hash that uses string keys, and returns the hash with symbol keys" do
+       test_hash = { "key_1" => "Value 1", "key_2" => "Value 2", "key_3" => "Value 3"  }
+       new_hash = IrusAnalytics::IrusClient.symbolize_keys(test_hash)
+       expect(new_hash).to include(key_1: "Value 1", key_2: "Value 2", key_3: "Value 3")
+     end
+  end
+
 end
