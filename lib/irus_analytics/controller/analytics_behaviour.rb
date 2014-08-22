@@ -26,7 +26,7 @@ module IrusAnalytics
             identifier = self.item_identifier if self.respond_to?(:item_identifier)
 
             analytics_params = { date_stamp: datetime, client_ip_address: client_ip, user_agent: user_agent, item_oai_identifier: identifier, file_url: file_url, 
-                                   http_referer: referer,  source_repository: source_repository }
+                                             http_referer: referer,  source_repository: source_repository }
 
             if irus_server_address.nil? 
               # In development and test Rails environment without irus_server_address we log in debug  
@@ -64,14 +64,14 @@ module IrusAnalytics
       end
 
       def filter_request?(request)
-          filter_request = false 
-          # If we can't determine the request.user_agent we should filter it...
-          if request.respond_to?(:user_agent)
-            filter_request = !request.headers['HTTP_RANGE'].nil?  || robot_user_agent?(request.user_agent) 
-          else
-            filter_request = true
-          end
-          filter_request
+        filter_request = false 
+        # If we can't determine the request.user_agent we should filter it...
+        if request.respond_to?(:user_agent)
+          filter_request = !request.headers['HTTP_RANGE'].nil?  || robot_user_agent?(request.user_agent) 
+        else
+          filter_request = true
+        end
+        filter_request
       end
 
       def robot_user_agent?(user_agent)

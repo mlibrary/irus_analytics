@@ -1,5 +1,4 @@
 require 'openurl'
-require 'ruby-debug'
 
 module IrusAnalytics
   class IrusAnalyticsService
@@ -22,6 +21,8 @@ module IrusAnalytics
         raise ArgumentError, "Missing the following required params: #{@missing_params}"
       end
 
+     tracker_context_object_builder = IrusAnalytics::TrackerContextObjectBuilder.new
+
       tracker_context_object_builder.set_event_datestamp(params[:date_stamp])
       tracker_context_object_builder.set_client_ip_address(params[:client_ip_address])
       tracker_context_object_builder.set_user_agent(params[:user_agent])
@@ -43,10 +44,6 @@ module IrusAnalytics
      def missing_mandatory_params?(params)
        params.each_pair { |key,value| @missing_fields << key if value.to_s.empty?  }
        return !@missing_params.empty? 
-     end
-
-     def tracker_context_object_builder
-        IrusAnalytics::TrackerContextObjectBuilder.new
      end
 
      def  openurl_link_resolver(context_object)
