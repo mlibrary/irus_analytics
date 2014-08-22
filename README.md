@@ -6,6 +6,8 @@ More information about IRUS-UK can be found at [http://www.irus.mimas.ac.uk/](ht
 
 This gem was developed for use with a Hydra repository [http://projecthydra.org/](http://projecthydra.org/), but it can be used with any other Rails based web application. 
 
+# Build Status
+![Build Status](https://api.travis-ci.org/uohull/irus_analytics.png?branch=master)
 
 ## Installation
 
