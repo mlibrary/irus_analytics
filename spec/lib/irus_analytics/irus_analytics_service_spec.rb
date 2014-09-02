@@ -24,7 +24,14 @@ describe IrusAnalytics::IrusAnalyticsService do
     end
 
     it "will throw an exception if any of the mandatory IRUS data is missing" do
-      expect { irus_analytics_service.send_analytics({}) }.to raise_error
+      irus_analytics_service.irus_server_address = "irus_address"
+      expect { irus_analytics_service.send_analytics({}) }.to raise_error(/Missing the following required params/)
+    end
+
+    it "will allow for a nil http referer" do
+      irus_analytics_service.irus_server_address = "irus_address"
+      test_params[:http_referer] = nil
+      irus_analytics_service.send_analytics(test_params)
     end
 
   end

@@ -42,8 +42,12 @@ module IrusAnalytics
 
      # At present, all the params, are mandatory...
      def missing_mandatory_params?(params)
-       params.each_pair { |key,value| @missing_fields << key if value.to_s.empty?  }
+       mandatory_params.each { |mandatory_param| @missing_params << mandatory_param  if params[mandatory_param].to_s.empty? }
        return !@missing_params.empty? 
+     end
+
+     def mandatory_params
+        [:date_stamp, :client_ip_address,  :user_agent, :item_oai_identifier, :file_url,  :source_repository]
      end
 
      def  openurl_link_resolver(context_object)
