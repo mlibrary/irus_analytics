@@ -1,31 +1,9 @@
 class IrusAnalyticsGenerator < Rails::Generators::Base
-  
-  desc "Irus Analytics Generator"
-  def create_irus_analytics_initializer
-      initializer "irus_analytics.rb" do
-<<EOF
-  # Configuration of IrusAnalytics
-  env = Rails.env.to_s
+  desc 'Create custom IrusAnalytics configurations for repo applications'
+  source_root File.expand_path('../../', __dir__)
+  hook_for :irus_analytics, as: :install
 
-  IrusAnalytics.configuration.source_repository = case env
-  when "development"
-    "your-repository.org"
-  when "test"
-    "your-repository.org"
-  else
-    "your-repository.org"
-  end
-
-  IrusAnalytics.configuration.irus_server_address = case env
-  when "development"
-    nil
-  when "test"
-    nil
-  else
-    "irus_server_address"
-  end
-EOF
-
-      end
+  def copy_settings
+    directory 'config'
   end
 end

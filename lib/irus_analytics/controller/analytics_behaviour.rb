@@ -8,7 +8,12 @@ module IrusAnalytics
         logger = Logger.new(STDOUT) if logger.nil? 
         # Retrieve required params from the request
         if request.nil?
-           logger.warn("IrusAnalytics::Controller::AnalyticsBehaviour.send_analytics exited: Request object is nil.")
+           logger.warn(
+             %Q(
+               #{I18n.t('irus_analytics.analytics_behaviour.exited', "#{self.class.name}.#{__method__}")}:
+               #{I18n.t('irus_analytics.analytics_behaviour.no_request_object')}
+             )
+           )
         else
           # Should we filter this request...
           unless filter_request?(request)
@@ -30,10 +35,19 @@ module IrusAnalytics
 
             if irus_server_address.nil? 
               # In development and test Rails environment without irus_server_address we log in debug  
-              if rails_environment == "development" || rails_environment == "test"
-                logger.debug("IrusAnalytics::ControllerBehaviour.send_irus_analytics params extracted #{analytics_params}")
+              if %w(development test).include?(Rails.env.to_s)
+                logger.debug(
+                  %Q(
+                    #{I18n.t('irus_analytics.analytics_behaviour.params_extracted', "#{self.class.name}.#{__method__}", analytics_params)}
+                  )
+                )
               else
-                logger.error("IrusAnalytics::Controller::AnalyticsBehaviour.send_analytics exited: Irus Server address is not set.")
+                logger.error(
+                  %Q(
+                    #{I18n.t('irus_analytics.analytics_behaviour.exited', "#{self.class.name}.#{__method__}")}:
+                    #{I18n.t('irus_analytics.analytics_behaviour.no_server_address')}
+                  )
+                )
               end
 
             else
@@ -56,11 +70,11 @@ module IrusAnalytics
       end
 
       def source_repository_name
-        IrusAnalytics.configuration.source_repository
+        IrusAnalytics::Configuration.source_repository
       end
 
       def irus_server_address
-        IrusAnalytics.configuration.irus_server_address
+        IrusAnalytics::Configuration.irus_server_address
       end
 
       def filter_request?(request)
@@ -75,7 +89,7 @@ module IrusAnalytics
       end
 
       def robot_user_agent?(user_agent)
-        IrusAnalytics::UserAgentFilter.instance.filter_user_agent?(user_agent)
+        IrusAnalytics::UserAgentFilter.filter_user_agent?(user_agent)
       end
 
       def rails_environment

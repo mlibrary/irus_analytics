@@ -1,13 +1,13 @@
 # IrusAnalytics
 
-IrusAnalytics is a gem that provides a simple way to send analytics to the IRUS-UK repository agggregation service.  
+IrusAnalytics is a gem that provides a simple way to send analytics to the IRUS-UK repository aggregation service.  
 
 More information about IRUS-UK can be found at [http://www.irus.mimas.ac.uk/](http://www.irus.mimas.ac.uk/).  In summary the IRUS-UK service is designed to provide article-level usage statistics for Institutional Repositories.  To sign up and use IRUS-UK, please see the above link. 
 
-This gem was developed for use with a Hydra repository [http://projecthydra.org/](http://projecthydra.org/), but it can be used with any other Rails based web application. 
+This gem was developed for use with a Hydra repository [http://projecthydra.org/](http://projecthydra.org/), but it can be used with any other web application supporting Ruby gems. 
 
-# Build Status
-![Build Status](https://api.travis-ci.org/uohull/irus_analytics.png?branch=master)
+## Build Status
+![Build Status](https://api.travis-ci.org/jisc/irus_analytics.png?branch=master)
 
 ## Installation
 
@@ -29,12 +29,22 @@ Once you have the gem, run the following generator:
 
     $ rails g irus_analytics
 
-This will generate a configuration file that exists within config/initializers/irus_analytics.rb
+This will generate editable configuration and translation files in the config folder.
 
-**IrusAnalytics.configuration.source\_repository** is used to configure the name of the source respository url (i.e. what the url for your repository)
-**IrusAnalytics.configuration.irus\_server\_address** is used to define the IRUS-UK server endpoint, this can be configured for the test version of the service.  
+### config/irus_config.yml
+This uses a similar mechanism to the standard rails database.yml file to allow for per-environment configuration of the values for:
 
-The Irus analytics code is designed to be called after a download event has happened in your rails application.  The following code needs adding to the Rails controller handles the content download.
+**source_repository**\
+ is used to configure the name of the source respository url (i.e. what the url for your repository)
+
+**irus_server_address**\
+ is used to define the IRUS-UK server endpoint, this can be configured for the test version of the service.
+
+**robots_file**\
+is used to specify the name of the file containing the robot UserAgents as regular expressions.  
+
+### Integration
+The IrusAnalytics code is designed to be called after a download event has happened in your application. The following code added to the Rails controller handles the content download.
 
 A simple example...
 
