@@ -7,7 +7,7 @@ module IrusAnalytics
     delegate :admin, :referent, to: :context_object
 
     private
-    def scope
+    def i18n_scope
       [:irus_analytics, :tracker_context]
     end
 
@@ -18,7 +18,7 @@ module IrusAnalytics
     public
     %w(event_datestamp ip_address user_agent file_url http_referer source_repository).each do |name|
       define_method("set_#{name}") do | value |
-        admin.merge!(I18n.t(".handles.#{name}", scope: scope)=>{'label' => I18n.t(".labels.#{name}", scope: scope), 'value' => value})
+        admin.merge!(I18n.t(".handles.#{name}", scope: i18n_scope)=>{'label' => I18n.t(".labels.#{name}", scope: i18n_scope), 'value' => value})
       end
     end
 
