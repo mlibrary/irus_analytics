@@ -27,7 +27,7 @@ Or install it yourself as:
 
 Once you have the gem, run the following generator:
 
-    $ rails g irus_analytics
+    $ rails g irus_analytics:config
 
 This will generate editable configuration and translation files in the config folder.
 

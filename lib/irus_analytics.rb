@@ -1,5 +1,8 @@
 require "resque/server"
-require 'irus_analytics/rail_tie' if defined?(Rails)
+if defined?(Rails)
+  require 'rails/generators'
+  require 'irus_analytics/rail_tie'
+end
 require "irus_analytics/version"
 require "irus_analytics/controller/analytics_behaviour"
 require "irus_analytics/irus_analytics_service"
