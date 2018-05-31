@@ -5,6 +5,7 @@ en:
       exited: '%{method} exited'
       no_server_address: No server address
       params_extracted: '%{method} parameters extracted'
+      enquing_error: 'Problem enqueing the analytics with Resque. Error: %{error}'
     tracker_context:
       handles:
         event_datestamp: url_tim

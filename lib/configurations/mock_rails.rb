@@ -1,4 +1,5 @@
 require 'i18n'
+require 'active_support/string_inquirer'
 module Configurations
   class MockRails
     class << self
@@ -8,8 +9,7 @@ module Configurations
         I18n.backend.load_translations
         Object.const_set('Rails', Class.new do
           define_singleton_method(:env) do
-            require 'active_support/string_inquirer'
-            ActiveSupport::StringInquirer.new(ENV['RAILS_ENV'] || 'production')
+            ::ActiveSupport::StringInquirer.new(ENV['RAILS_ENV'] || 'production')
           end
         end) unless defined?(Rails)
       end
