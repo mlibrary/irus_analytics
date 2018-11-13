@@ -1,0 +1,12 @@
+development:
+  source_repository: your-repository.org
+  irus_server_address:
+  robots_file: counter_robot_list.txt
+test:
+  source_repository: your-repository.org
+  irus_server_address:
+  robots_file: counter_robot_list.txt
+production:
+  source_repository: your-repository.org
+  irus_server_address: <%= ENV['IRUS_SERVER_ADDRESS'] %>
+  robots_file: counter_robot_list.txt
