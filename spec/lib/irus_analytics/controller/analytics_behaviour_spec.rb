@@ -7,7 +7,7 @@ end
 
 describe IrusAnalytics::Controller::AnalyticsBehaviour do
 
-  describe ".send_analytics" do
+  describe ".send_irus_analytics" do
     before(:each) do
        @test_class = TestClass.new
        @test_class.request  = double("request", :remote_ip => "127.0.0.1", :user_agent => "Test user agent",  url: "http://localhost:3000/test", referer: "http://localhost:3000", headers: { "HTTP_RANGE" => nil })
@@ -32,7 +32,7 @@ describe IrusAnalytics::Controller::AnalyticsBehaviour do
        # Should NOT filter this request
        expect(@test_class).to receive(:filter_request?).and_return(false)
        expect(Resque).to receive(:enqueue).with(IrusAnalytics::IrusClient, "irus-server-address.org", params )
-       @test_class.send_analytics
+       @test_class.send_irus_analytics
     end
 
     it "will not call the send_irus_analytics method when there is a filter user-agent.." do
@@ -49,7 +49,7 @@ describe IrusAnalytics::Controller::AnalyticsBehaviour do
        allow(Resque).to receive(:enqueue) .and_return(nil)
        # Should filter this request
        expect(Resque).to_not receive(:enqueue).with(IrusAnalytics::IrusClient, "irus-server-address.org", params )
-       @test_class.send_analytics       
+       @test_class.send_irus_analytics
     end
 
 
@@ -67,7 +67,7 @@ describe IrusAnalytics::Controller::AnalyticsBehaviour do
        allow(Resque).to receive(:enqueue) .and_return(nil)
        # Should filter this request
        expect(Resque).to_not receive(:enqueue).with(IrusAnalytics::IrusClient, "irus-server-address.org", params )
-       @test_class.send_analytics       
+       @test_class.send_irus_analytics
     end
 
 

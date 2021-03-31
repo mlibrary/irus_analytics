@@ -1,0 +1,9 @@
+Description:
+    Create necessary configuration files for IRUS analytics
+
+Example:
+    bundle exec rails generate irus_analytics (parms todo)
+
+    This will create:
+        config/initializers/irus_analytics.rb
+        config/irus_analytics_counter_robot_list.txt

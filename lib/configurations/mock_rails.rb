@@ -1,5 +1,9 @@
+# frozen_string_literal: true
+
 require 'i18n'
 require 'active_support/string_inquirer'
+require 'logger'
+
 module Configurations
   class MockRails
     class << self
@@ -11,6 +15,10 @@ module Configurations
           define_singleton_method(:env) do
             ::ActiveSupport::StringInquirer.new(ENV['RAILS_ENV'] || 'production')
           end
+          @@logger = Logger.new( STDOUT )
+          define_singleton_method(:logger)  { @@logger }
+          define_singleton_method(:logger=) { |logger| @@logger=logger }
+          define_singleton_method(:root)    { Pathname.new('.') }
         end) unless defined?(Rails)
       end
     end
