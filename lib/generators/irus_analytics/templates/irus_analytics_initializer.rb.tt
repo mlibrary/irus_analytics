@@ -1,0 +1,8 @@
+
+IrusAnalytics::Integration.setup do |config|
+
+  config.enabled = true
+  config.enable_send_logger = <%= default_enable_send_logger %>
+  config.verbose_debug = false
+
+end

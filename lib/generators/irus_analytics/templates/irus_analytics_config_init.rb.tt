@@ -1,0 +1,22 @@
+# frozen_string_literal: true
+# Configuration for IrusAnalytics
+
+env = Rails.env.to_s
+
+IrusAnalytics.configuration.source_repository = case env
+                                                when "development"
+                                                  "<%= default_source_repository 'development' %>"
+                                                when "test"
+                                                  "<%= default_source_repository 'test' %>"
+                                                else
+                                                  "<%= default_source_repository 'production' %>"
+                                                end
+
+IrusAnalytics.configuration.irus_server_address = case env
+                                                  when "development"
+                                                    nil
+                                                  when "test"
+                                                    nil
+                                                  else
+                                                    "<%= default_irus_server_address %>"
+                                                  end
