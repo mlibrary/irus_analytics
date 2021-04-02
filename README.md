@@ -35,7 +35,7 @@ And this (currently not working) TODO: fix
 
 This will generate editable configuration and translation files in the config folder.
 
-### config/irus_config.yml
+### config/irus_analytics_config.yml
 This uses a similar mechanism to the standard rails database.yml file to allow for per-environment configuration of the values for:
 
 **source_repository**\
