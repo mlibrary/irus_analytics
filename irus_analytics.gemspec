@@ -18,9 +18,9 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "openurl", ">= 0.5"
-  spec.add_dependency "resque", ">= 1.25"
-  spec.add_dependency 'config_files', '>= 0.1.3'
+  spec.add_dependency "openurl" # https://github.com/openurl/openurl
+  spec.add_dependency "resque"
+  spec.add_dependency 'config_files' # https://github.com/blackrat/config_files
   spec.add_dependency 'i18n'
 
   spec.add_development_dependency 'rails'

@@ -69,7 +69,7 @@ module IrusAnalytics
     end
 
     def self.verbose_debug
-      ::IrusAnalytics::Integration.verbose_debug
+      ::IrusAnalytics::Configuration.verbose_debug
     end
 
     def bold_debug( msg = nil, label: nil, lines: 1, &block )
@@ -89,7 +89,7 @@ module IrusAnalytics
     end
 
     def verbose_debug
-      ::IrusAnalytics::Integration.verbose_debug
+      ::IrusAnalytics::Configuration.verbose_debug
     end
 
   end

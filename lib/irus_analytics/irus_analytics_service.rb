@@ -60,9 +60,9 @@ module IrusAnalytics
 
     ensure
       bold_debug [ here, called_from, "params=#{params}",
-                   "::IrusAnalytics::Integration.enable_send_logger=#{::IrusAnalytics::Integration.enable_send_logger}",
+                   "::IrusAnalytics::Configuration.enable_send_logger=#{::IrusAnalytics::Configuration.enable_send_logger}",
                    "" ] if verbose_debug
-      if ::IrusAnalytics::Integration.enable_send_logger
+      if ::IrusAnalytics::Configuration.enable_send_logger
         log_hash = {}
         log_hash[:params] = log_params
         log_hash[:irus_server_address] = @irus_server_address

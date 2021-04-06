@@ -7,5 +7,4 @@ Example:
     This will create:
         config/irus_analytics_config.yml
         config/irus_analytics_counter_robot_list.txt
-        config/initializers/irus_analytics.rb
         config/irus_analytics_counter_robot_list.txt

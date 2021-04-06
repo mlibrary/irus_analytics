@@ -4,7 +4,6 @@ require 'logger'
 require 'resque'
 require 'active_support/core_ext/module/delegation'
 require 'irus_analytics/configuration'
-require 'irus_analytics/integration'
 require 'irus_analytics/irus_analytics_logger'
 
 module IrusAnalytics
@@ -14,12 +13,8 @@ module IrusAnalytics
 
       private
 
-      delegate :source_repository, :irus_server_address, to: ::IrusAnalytics::Configuration
+      delegate :enabled, :irus_server_address, :source_repository, to: ::IrusAnalytics::Configuration
       attr_writer :logger
-
-      def enable_irus_analytics?
-        ::IrusAnalytics::Integration.enabled
-      end
 
       def logger
         # @logger ||= Logger.new(STDOUT)
@@ -105,6 +100,7 @@ module IrusAnalytics
         rv = irus_server_address.nil? && log_missing
         bold_debug [ here, called_from,
                      "self.class.name=#{self.class.name}",
+                     "irus_server_address=#{irus_server_address}",
                      "return value=#{rv}",
                      "" ] if verbose_debug
         rv
@@ -130,9 +126,9 @@ module IrusAnalytics
         bold_debug [ here, called_from,
                      "self.class.name=#{self.class.name}",
                      "item_identifier=#{item_identifier}",
-                     "enable_irus_analytics?=#{enable_irus_analytics?}",
+                     "enabled=#{enabled}",
                      "" ] if verbose_debug
-        return unless enable_irus_analytics?
+        return unless enabled
         @identifier = item_identifier
         (request && ( filter_request?(request) || missing_server? || enqueue )) || display_warning
       end

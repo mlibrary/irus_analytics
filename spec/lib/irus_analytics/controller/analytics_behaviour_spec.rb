@@ -7,6 +7,10 @@ end
 
 describe IrusAnalytics::Controller::AnalyticsBehaviour do
 
+  describe "irus analytics is enabled" do
+    it { expect(::IrusAnalytics::Configuration.enabled).to eq true }
+  end
+
   describe ".send_irus_analytics" do
     before(:each) do
        @test_class = TestClass.new
