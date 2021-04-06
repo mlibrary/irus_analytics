@@ -5,10 +5,6 @@ class IrusAnalyticsGenerator < Rails::Generators::Base
 
   # the following public methods are performed in order of appearance
 
-  def copy_irus_analytics_initializer
-    template 'irus_analytics_initializer.rb', 'config/initializers/irus_analytics_initializer.rb'
-  end
-
   def copy_counter_robot_list
     copy_file 'counter_robot_list.txt', 'config/irus_analytics_counter_robot_list.txt'
   end

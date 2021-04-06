@@ -6,12 +6,27 @@ require 'configurations'
 module IrusAnalytics
   class Configuration
     include ::ConfigFiles
-    config_directories etc: [File.join(__dir__, '..', '..', 'config')]
+
+    if defined? Rails
+      # puts "\n>>\n>>\nFile.absolute_path(File.join('.', 'config'))=#{File.absolute_path(File.join('.', 'config'))}\n>>\n>>\n"
+      # puts "\n>>\n>>\nRails.root=#{Rails.root}\n>>\n>>\n"
+      config_dirs = [File.absolute_path(File.join('.', 'config'))]
+    else
+      config_dirs = [File.join(__dir__, '..', '..', 'config')]
+    end
+    config_directories etc: config_dirs
+
     static_config_files :irus_analytics_config
-    ::Configurations::MockRails.(self.directories[:etc]) if !defined?(Rails)
+    ::Configurations::MockRails.(self.directories[:etc]) unless defined? Rails
 
     class << self
-      [:source_repository, :irus_server_address, :robots_file].each do |name|
+      [ :enabled,
+        :enable_send_logger,
+        :irus_server_address,
+        :robots_file,
+        :source_repository,
+        :verbose_debug ].each do |name|
+
         define_method name do
           irus_analytics_config[Rails.env][name.to_s]
         end

@@ -10,6 +10,11 @@ describe IrusAnalytics::IrusAnalyticsService do
                          http_referer: "https://www.google.co.uk/search?q=hydra+hull%3A123&ie=utf-8&oe=utf-8&aq=t&rls=org.mozilla:en-US:official&client=firefox-a&channel=sb&gfe_rd=cr",
                          source_repository: "hydra.hull.ac.uk"  } }
 
+
+  describe "irus analytics is enabled" do
+    it { expect(::IrusAnalytics::Configuration.enabled).to eq true }
+  end
+
   describe ".send_analytics" do
 
     before (:each) do
