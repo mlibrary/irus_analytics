@@ -28,7 +28,15 @@ module IrusAnalytics
         :verbose_debug ].each do |name|
 
         define_method name do
-          irus_analytics_config[Rails.env][name.to_s]
+          rv = nil
+          if defined?( Settings ) && Settings.hostname.present?
+            if irus_analytics_config[Rails.env][:named_servers].present?
+              named_server = Settings.hostname
+              rv = irus_analytics_config[Rails.env][named_server][name.to_s]
+            end
+          end
+          rv = irus_analytics_config[Rails.env][name.to_s] if rv.blank?
+          rv
         end
       end
 
