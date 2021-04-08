@@ -1,20 +1,26 @@
 development:
   enabled: true
+  enable_send_investigations: true
   enable_send_logger: true
+  enable_send_requests: true
   irus_server_address:
   robots_file: irus_analytics_counter_robot_list.txt
   source_repository: your-repository.org
   verbose_debug: true
 test:
   enabled: true
+  enable_send_investigations: true
   enable_send_logger: false
+  enable_send_requests: true
   irus_server_address:
   robots_file: irus_analytics_counter_robot_list.txt
   source_repository: your-repository.org
   verbose_debug: false
 production:
   enabled: true
+  enable_send_investigations: true
   enable_send_logger: false
+  enable_send_requests: true
   irus_server_address: <%= ENV['IRUS_SERVER_ADDRESS'] %>
   robots_file: irus_analytics_counter_robot_list.txt
   source_repository: your-repository.org

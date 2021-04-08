@@ -9,6 +9,10 @@ module IrusAnalytics
   class IrusAnalyticsService
     include DebugLogger
 
+    delegate :enabled,
+             :enable_send_investigations,
+             :enable_send_requests, to: ::IrusAnalytics::Configuration
+
     attr_accessor :irus_server_address,
                   :log_params,
                   :tracker_context_object_builder,
@@ -23,10 +27,18 @@ module IrusAnalytics
     end
 
     def send_analytics_investigation(params = {})
+      unless enable_send_investigations
+        bold_debug [ here, called_from, "skipping investigate", "params=#{params}", "" ] if verbose_debug
+        return
+      end
       send_analytics(params, INVESTIGATION)
     end
 
     def send_analytics_request(params = {})
+      unless enable_send_requests
+        bold_debug [ here, called_from, "skipping request", "params=#{params}", "" ] if verbose_debug
+        return
+      end
       send_analytics(params, REQUEST)
     end
 

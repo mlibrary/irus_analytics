@@ -21,7 +21,9 @@ module IrusAnalytics
 
     class << self
       [ :enabled,
+        :enable_send_investigations,
         :enable_send_logger,
+        :enable_send_requests,
         :irus_server_address,
         :robots_file,
         :source_repository,
