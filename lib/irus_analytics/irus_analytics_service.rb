@@ -2,13 +2,17 @@
 
 require 'openurl'
 require_relative './irus_analytics_logger'
+require 'irus_analytics/elements'
 
 module IrusAnalytics
 
   class IrusAnalyticsService
     include DebugLogger
 
-    attr_accessor :irus_server_address
+    attr_accessor :irus_server_address,
+                  :log_params,
+                  :tracker_context_object_builder,
+                  :transport_response_code
 
     def initialize(irus_server_address)
       bold_debug [ here, called_from,
@@ -18,41 +22,51 @@ module IrusAnalytics
       @missing_params = []
     end
 
-    def send_analytics(params = {})
+    def send_analytics_investigation(params = {})
+      send_analytics(params, INVESTIGATION)
+    end
+
+    def send_analytics_request(params = {})
+      send_analytics(params, REQUEST)
+    end
+
+    def send_analytics(params = {}, usage_event_type=REQUEST)
       bold_debug [ here, called_from, "params=#{params}", "" ] if verbose_debug
-      log_params = params
+      @log_params = params
       transport_reponse_code = nil
       if @irus_server_address.blank?
         raise ArgumentError, "Cannot send analytics: Missing Irus server address"
       end
-      default_params = {date_stamp: "",
-                        client_ip_address: "",
-                        user_agent: "",
-                        item_oai_identifier: "",
-                        file_url: "",
-                        http_referer: "",
-                        source_repository: ""}
+      default_params = { date_stamp: "",
+                         client_ip_address: "",
+                         file_url: "",
+                         http_referer: "",
+                         item_oai_identifier: "",
+                         source_repository: "",
+                         usage_event_type: usage_event_type,
+                         user_agent: "" }
       params = default_params.merge(params)
-      log_params = params
+      @log_params = params
 
       if missing_mandatory_params?(params)
         raise ArgumentError, "Missing the following required params: #{@missing_params}"
       end
 
-      tracker_context_object_builder = IrusAnalytics::TrackerContextObjectBuilder.new
+      @tracker_context_object_builder = IrusAnalytics::TrackerContextObjectBuilder.new
 
-      tracker_context_object_builder.set_event_datestamp(params[:date_stamp])
-      tracker_context_object_builder.set_client_ip_address(params[:client_ip_address])
-      tracker_context_object_builder.set_user_agent(params[:user_agent])
-      tracker_context_object_builder.set_oai_identifier(params[:item_oai_identifier])
-      tracker_context_object_builder.set_file_url(params[:file_url])
-      tracker_context_object_builder.set_http_referer(params[:http_referer])
-      tracker_context_object_builder.set_source_repository(params[:source_repository])
+      @tracker_context_object_builder.set_event_datestamp(params[:date_stamp])
+      @tracker_context_object_builder.set_client_ip_address(params[:client_ip_address])
+      @tracker_context_object_builder.set_file_url(params[:file_url])
+      @tracker_context_object_builder.set_http_referer(params[:http_referer])
+      @tracker_context_object_builder.set_item_oai_identifier(params[:item_oai_identifier])
+      @tracker_context_object_builder.set_source_repository(params[:source_repository])
+      @tracker_context_object_builder.set_usage_event_type(params[:usage_event_type])
+      @tracker_context_object_builder.set_user_agent(params[:user_agent])
 
-      transport = openurl_link_resolver(tracker_context_object_builder.context_object)
+      transport = openurl_link_resolver(@tracker_context_object_builder.context_object)
       transport.get
 
-      transport_reponse_code = transport.code
+      @transport_reponse_code = transport.code
 
       if transport.code != "200"
         raise "Unexpected response from IRUS server"
@@ -64,10 +78,10 @@ module IrusAnalytics
                    "" ] if verbose_debug
       if ::IrusAnalytics::Configuration.enable_send_logger
         log_hash = {}
-        log_hash[:params] = log_params
+        log_hash[:params] = @log_params
         log_hash[:irus_server_address] = @irus_server_address
         log_hash[:missing_params] = @missing_params
-        log_hash[:transport_repsonse_code] = transport_reponse_code
+        log_hash[:transport_repsonse_code] = @transport_reponse_code
         msg = ActiveSupport::JSON.encode( log_hash ).to_s
         IrusAnalytics.send_logger.info( msg )
       end
