@@ -8,14 +8,22 @@ module IrusAnalytics
     @queue = :irus_analytics
 
     class << self
-      def perform(irus_server_address, analytics_params)
+      def perform(irus_server_address, analytics_params, usage_event_type)
         DebugLogger.bold_debug [ DebugLogger.here,
                                  DebugLogger.called_from,
                                  "irus_server_address=#{irus_server_address}",
                                  "analytics_params=#{analytics_params}",
+                                 "usage_event_type=#{usage_event_type}",
                                  "" ] if DebugLogger.verbose_debug
         service = IrusAnalytics::IrusAnalyticsService.new(irus_server_address)
-        service.send_analytics(analytics_params.deep_symbolize_keys)
+        case usage_event_type
+        when REQUEST
+          service.send_analytics_request(analytics_params.deep_symbolize_keys)
+        when INVESTIGATION
+          service.send_analytics_investigation(analytics_params.deep_symbolize_keys)
+        else
+          service.send_analytics(analytics_params.deep_symbolize_keys)
+        end
       end
     end
   end

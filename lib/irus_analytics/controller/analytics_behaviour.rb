@@ -13,7 +13,12 @@ module IrusAnalytics
 
       private
 
-      delegate :enabled, :irus_server_address, :source_repository, to: ::IrusAnalytics::Configuration
+      delegate :enabled,
+               :enable_send_investigations,
+               :enable_send_requests,
+               :irus_server_address,
+               :source_repository, to: ::IrusAnalytics::Configuration
+
       attr_writer :logger
 
       def logger
@@ -114,22 +119,37 @@ module IrusAnalytics
                        "self.class.name=#{self.class.name}",
                        "irus_server_address=#{server}",
                        "analytics_params=#{params}",
+                       "@identifier=#{@identifier}",
+                       "@usage_event_type=#{@usage_event_type}",
                        "" ] if verbose_debug
-          Resque.enqueue(IrusClient, server, params)
+          Resque.enqueue(IrusClient, server, params, @usage_event_type)
         rescue Exception => e
           logger.error(%Q(#{I18n.t('.error', method: debugger_method, scope: i18n_scope)}:#{I18n.t('.enquing_error', error: e, scope: i18n_scope)}))
         end
       end
 
       public
-      def send_irus_analytics(item_identifier=nil)
+
+
+      def send_irus_analytics_investigation(item_identifier=nil)
+        send_irus_analytics(item_identifier=nil, INVESTIGATION)
+      end
+
+      def send_irus_analytics_request(item_identifier=nil)
+        send_irus_analytics(item_identifier=nil, REQUEST)
+      end
+
+
+      def send_irus_analytics(item_identifier=nil, usage_event_type=REQUEST)
         bold_debug [ here, called_from,
                      "self.class.name=#{self.class.name}",
                      "item_identifier=#{item_identifier}",
+                     "usage_event_type=#{usage_event_type}",
                      "enabled=#{enabled}",
                      "" ] if verbose_debug
         return unless enabled
         @identifier = item_identifier
+        @usage_event_type = usage_event_type
         (request && ( filter_request?(request) || missing_server? || enqueue )) || display_warning
       end
 
