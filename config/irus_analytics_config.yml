@@ -3,6 +3,7 @@ development:
   enable_send_investigations: true
   enable_send_logger: true
   enable_send_requests: true
+  enable_skip_send_method: true
   irus_server_address:
   robots_file: irus_analytics_counter_robot_list.txt
   source_repository: your-repository.org
@@ -12,6 +13,7 @@ test:
   enable_send_investigations: true
   enable_send_logger: false
   enable_send_requests: true
+  enable_skip_send_method: true
   irus_server_address:
   robots_file: irus_analytics_counter_robot_list.txt
   source_repository: your-repository.org
@@ -21,6 +23,7 @@ production:
   enable_send_investigations: true
   enable_send_logger: false
   enable_send_requests: true
+  enable_skip_send_method: true
   irus_server_address: <%= ENV['IRUS_SERVER_ADDRESS'] %>
   robots_file: irus_analytics_counter_robot_list.txt
   source_repository: your-repository.org

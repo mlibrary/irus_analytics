@@ -16,6 +16,7 @@ module IrusAnalytics
       delegate :enabled,
                :enable_send_investigations,
                :enable_send_requests,
+               :enable_skip_send_method,
                :irus_server_address,
                :source_repository, to: ::IrusAnalytics::Configuration
 
@@ -128,6 +129,25 @@ module IrusAnalytics
         end
       end
 
+      def skip_send?
+        bold_debug [ here, called_from,
+                     "self.class.name=#{self.class.name}",
+                     "enable_skip_send_method=#{enable_skip_send_method}",
+                     "" ] if verbose_debug
+        return false unless enable_skip_send_method
+        bold_debug [ here, called_from,
+                     "self.class.name=#{self.class.name}",
+                     "respond_to?(:skip_send_irus_analytics?)=#{respond_to?(:skip_send_irus_analytics?)}",
+                     "" ] if verbose_debug
+        return false unless respond_to?(:skip_send_irus_analytics?)
+        rv = skip_send_irus_analytics?
+        bold_debug [ here, called_from,
+                     "self.class.name=#{self.class.name}",
+                     "skip_send_irus_analytics?=#{rv}",
+                     "" ] if verbose_debug
+        rv
+      end
+
       public
 
 
@@ -148,6 +168,7 @@ module IrusAnalytics
                      "enabled=#{enabled}",
                      "" ] if verbose_debug
         return unless enabled
+        return if skip_send?
         @identifier = item_identifier
         @usage_event_type = usage_event_type
         (request && ( filter_request?(request) || missing_server? || enqueue )) || display_warning
