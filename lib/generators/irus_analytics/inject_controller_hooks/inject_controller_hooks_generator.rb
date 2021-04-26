@@ -1,22 +1,8 @@
 # frozen_string_literal: true
 
-require_relative '../../../lib/irus_analytics/rails/generator_service'
-
-module InjectControllerHooksGeneratorMethods
-
-  # do it through the module, or it doesn't seem to be invoked by "class << self"
-  def self.included( base )
-    [ :after_action, :controller_class_name, :controller_file_name, :debug_verbose, :test_mode ].each do |name|
-      base.define_method name do
-        cli_options[name]
-      end
-    end
-  end
-
-end
+require_relative '../../../../lib/irus_analytics/rails/generator_service'
 
 class InjectControllerHooksGenerator < Rails::Generators::Base
-  include InjectControllerHooksGeneratorMethods
 
   AFTER_ACTION_LABEL = 'IrusAnalytics after action'
   INCLUDE_IRUS_ANALYTICS_CODE = 'include IrusAnalytics::Controller::AnalyticsBehaviour'
@@ -25,12 +11,16 @@ class InjectControllerHooksGenerator < Rails::Generators::Base
   SKIP_SEND_IRUS_ANALYTICS_METHOD_NAME = 'skip_send_irus_analytics?'
 
   argument :options_str, type: :string, default: '{}',
-           desc: I18n.t('irus_analytics.generators.inject_controller_hooks.argument.options_str.desc', code: code)
+           desc: I18n.t('irus_analytics.generators.inject_controller_hooks.argument.options_str.desc')
 
   desc I18n.t('irus_analytics.generators.inject_controller_hooks.desc')
 
-  # puts "File.expand_path('../../../..', __FILE__)=#{File.expand_path('../../../..', __FILE__)}"
-  source_root File.expand_path('../../../..', __FILE__)
+  if defined? Rails
+    source_root Rails.root
+  else
+    # puts "File.expand_path('../../../..', __FILE__)=#{File.expand_path('../../../..', __FILE__)}"
+    source_root File.expand_path('../../../..', __FILE__)
+  end
 
   def inject_controller_code_using_class_name
     say_status "info", "inject_controller_code_using_class_name", :blue
@@ -54,6 +44,10 @@ class InjectControllerHooksGenerator < Rails::Generators::Base
 
   private
 
+  def cli_options
+    @cli_options ||= helper.cli_options_init( options_str: options_str, debug_verbose: debug_verbose? )
+  end
+
   def helper
     @helper ||= GeneratorService.new( generator: self,
                                       generator_name: self.class.name,
@@ -61,12 +55,14 @@ class InjectControllerHooksGenerator < Rails::Generators::Base
                                       cli_options: options_str )
   end
 
-  def cli_options
-    @cli_options ||= helper.cli_options_init( options_str: options_str, debug_verbose: debug_verbose? )
-  end
-
   def debug_verbose?
     @debug_verbose ||= true
+  end
+
+  [ :after_action, :controller_class_name, :controller_file_name, :debug_verbose, :test_mode ].each do |name|
+    self.define_method name do
+      cli_options[name]
+    end
   end
 
   def do_inject_controller_code(file_path, class_name, after_action:)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class IrusAnalyticsGenerator < Rails::Generators::Base
+class ConfigGenerator < Rails::Generators::Base
   source_root File.expand_path('templates', __dir__)
 
   # the following public methods are performed in order of appearance
@@ -11,6 +11,10 @@ class IrusAnalyticsGenerator < Rails::Generators::Base
 
   def copy_irus_analytics_config
     template 'irus_analytics_config.yml', 'config/irus_analytics_config.yml'
+  end
+
+  def copy_irus_analytics_localization_en
+    copy file 'irus_analytics.en.yml', 'config/localizations/irus_analytics.en.yml'
   end
 
   private

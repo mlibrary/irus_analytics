@@ -2,7 +2,7 @@ Description:
     Inject after action and support methods into target controller
 
 Example:
-    rails generate inject_controller_hooks ModuleName::ControllerClass
+    rails generate irus_analytics:inject_controller_hooks
 
     This will create:
         N/A
