@@ -4,11 +4,15 @@ require_relative '../../../../lib/irus_analytics/rails/generator_service'
 
 class InjectControllerHooksGenerator < Rails::Generators::Base
 
-  AFTER_ACTION_LABEL = 'IrusAnalytics after action'
-  INCLUDE_IRUS_ANALYTICS_CODE = 'include IrusAnalytics::Controller::AnalyticsBehaviour'
-  INCLUDE_IRUS_ANALYTICS_LABEL = 'include IrusAnalytics controller behavior'
-  ITEM_IDENTIFIER_METHOD_NAME = 'item_identifier'
-  SKIP_SEND_IRUS_ANALYTICS_METHOD_NAME = 'skip_send_irus_analytics?'
+  AFTER_ACTION_LABEL = 'IrusAnalytics after action'.freeze
+  INCLUDE_IRUS_ANALYTICS_CODE = 'include IrusAnalytics::Controller::AnalyticsBehaviour'.freeze
+  INCLUDE_IRUS_ANALYTICS_LABEL = 'include IrusAnalytics controller behavior'.freeze
+  ITEM_IDENTIFIER_METHOD_NAME = 'item_identifier'.freeze
+  SKIP_SEND_IRUS_ANALYTICS_METHOD_NAME = 'skip_send_irus_analytics?'.freeze
+
+  VALID_TYPES = [ 'investigation', 'request' ].freeze
+  TYPE_TO_AFTER_ACTION_METHOD = { 'investigation' => 'send_irus_analytics_investigation',
+                                  'request' => 'send_irus_analytics_request' }.freeze
 
   argument :options_str, type: :string, default: '{}',
            desc: I18n.t('irus_analytics.generators.inject_controller_hooks.argument.options_str.desc')
@@ -24,6 +28,7 @@ class InjectControllerHooksGenerator < Rails::Generators::Base
 
   def inject_controller_code_using_class_name
     say_status "info", "inject_controller_code_using_class_name", :blue
+    say_status "info", "type=#{type}", :blue
     say_status "info", "after_action=#{after_action}", :blue
     say_status "info", "controller_class_name=#{controller_class_name}", :blue
     return if after_action.blank?
@@ -34,6 +39,7 @@ class InjectControllerHooksGenerator < Rails::Generators::Base
 
   def inject_controller_code_using_file_name
     say_status "info", "inject_controller_code_using_file_name", :blue
+    say_status "info", "type=#{type}", :blue
     say_status "info", "after_action=#{after_action}", :blue
     say_status "info", "controller_file_name=#{controller_file_name}", :blue
     return if after_action.blank?
@@ -45,7 +51,19 @@ class InjectControllerHooksGenerator < Rails::Generators::Base
   private
 
   def cli_options
-    @cli_options ||= helper.cli_options_init( options_str: options_str, debug_verbose: debug_verbose? )
+    @cli_options ||= cli_options_init
+  end
+
+  def cli_options_init
+    rv = helper.cli_options_init( options_str: options_str, debug_verbose: debug_verbose? )
+    if rv['type'].blank?
+      rv['type'] = 'request'
+      rv[:type] = 'request'
+    elsif !VALID_TYPES.include?( rv['type'] )
+      rv['type'] = 'request'
+      rv[:type] = 'request'
+    end
+    return rv
   end
 
   def helper
@@ -59,7 +77,7 @@ class InjectControllerHooksGenerator < Rails::Generators::Base
     @debug_verbose ||= true
   end
 
-  [ :after_action, :controller_class_name, :controller_file_name, :debug_verbose, :test_mode ].each do |name|
+  [ :after_action, :controller_class_name, :controller_file_name, :debug_verbose, :test_mode, :type ].each do |name|
     self.define_method name do
       cli_options[name]
     end
@@ -89,7 +107,7 @@ class InjectControllerHooksGenerator < Rails::Generators::Base
   end
 
   def after_action_code( after_action )
-    "after_action :send_irus_analytics_request, only: [:#{after_action}]"
+    "after_action :#{TYPE_TO_AFTER_ACTION_METHOD[type]}, only: [:#{after_action}]"
   end
 
   def inject_after_action( target_path, after_action )
