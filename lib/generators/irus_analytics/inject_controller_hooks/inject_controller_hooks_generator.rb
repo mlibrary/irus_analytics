@@ -2,7 +2,7 @@
 
 require_relative '../../../../lib/irus_analytics/rails/generator_service'
 
-class InjectControllerHooksGenerator < Rails::Generators::Base
+class IrusAnalytics::InjectControllerHooksGenerator < Rails::Generators::Base
 
   AFTER_ACTION_LABEL = 'IrusAnalytics after action'.freeze
   INCLUDE_IRUS_ANALYTICS_CODE = 'include IrusAnalytics::Controller::AnalyticsBehaviour'.freeze
@@ -115,6 +115,7 @@ class InjectControllerHooksGenerator < Rails::Generators::Base
     label = AFTER_ACTION_LABEL
     return if helper.initial_check_including( target_path, code, label )
     begin # while for breaks
+      break if helper.inject_code_after_comment( target_path, code, AFTER_ACTION_LABEL, label )
       break if helper.inject_code_after_last_line_matching( target_path, code, /^\s*after_action .+$/, label )
       break if helper.inject_code_after_comment( target_path, code, INCLUDE_IRUS_ANALYTICS_LABEL, label )
       break if helper.inject_code_after_first_line_including( target_path, code, INCLUDE_IRUS_ANALYTICS_CODE, label )

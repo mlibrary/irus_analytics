@@ -72,8 +72,12 @@ class GeneratorService
     end
   end
 
-  def inject_code_after_comment( target_path, code, comment, label = nil )
-    line = first_line_including( target_path, comment_text( 'end', comment ) )
+  def inject_code_after_comment( target_path, code, comment, label = nil, last_comment: true )
+    if last_comment
+      line = last_line_including( target_path, comment_text( 'end', comment ) )
+    else
+      line = first_line_including( target_path, comment_text( 'end', comment ) )
+    end
     return false unless line.present?
     if label.blank?
       inject_line( target_path, code, after: line )

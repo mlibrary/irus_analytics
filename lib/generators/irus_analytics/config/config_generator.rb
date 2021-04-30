@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ConfigGenerator < Rails::Generators::Base
+class IrusAnalytics::ConfigGenerator < Rails::Generators::Base
   source_root File.expand_path('templates', __dir__)
 
   # the following public methods are performed in order of appearance
