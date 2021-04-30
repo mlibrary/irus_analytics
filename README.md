@@ -66,7 +66,7 @@ A simple example...
       protected 
     
       #  You need to define this method for IrusAnalytics to use as the identifier (typically a OAI valid identifier)
-      def item_identifier 
+      def item_identifier_for_irus_analytics 
         @id
       end
     end
@@ -77,7 +77,7 @@ Therefore in summary...
   
     after_filter :send_analytics, only: [:show]
 
-    def item_identifier
+    def item_identifier_for_irus_analytics
     end
 
 ... needs adding to the relevant controller.  
