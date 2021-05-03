@@ -53,13 +53,13 @@ module IrusAnalytics
         return @identifier if @identifier.present?
         bold_debug [ here, called_from,
                      "self.class.name=#{self.class.name}",
-                     "respond_to?(:item_identifier)=#{respond_to?(:item_identifier)}",
+                     "respond_to?(:item_identifier_for_irus_analytics)=#{respond_to?(:item_identifier_for_irus_analytics)}",
                      "" ] if verbose_debug
-        return nil unless respond_to?(:item_identifier)
-        rv = item_identifier
+        return nil unless respond_to?(:item_identifier_for_irus_analytics)
+        rv = item_identifier_for_irus_analytics
         bold_debug [ here, called_from,
                      "self.class.name=#{self.class.name}",
-                     "item_identifier=#{rv}",
+                     "item_identifier_for_irus_analytics=#{rv}",
                      "" ] if verbose_debug
         rv
       end
@@ -151,25 +151,25 @@ module IrusAnalytics
       public
 
 
-      def send_irus_analytics_investigation(item_identifier=nil)
-        send_irus_analytics(item_identifier=nil, INVESTIGATION)
+      def send_irus_analytics_investigation(identifier=nil)
+        send_irus_analytics(identifier=identifier, INVESTIGATION)
       end
 
-      def send_irus_analytics_request(item_identifier=nil)
-        send_irus_analytics(item_identifier=nil, REQUEST)
+      def send_irus_analytics_request(identifier=nil)
+        send_irus_analytics(identifier=identifier, REQUEST)
       end
 
 
-      def send_irus_analytics(item_identifier=nil, usage_event_type=REQUEST)
+      def send_irus_analytics(identifier=nil, usage_event_type=REQUEST)
         bold_debug [ here, called_from,
                      "self.class.name=#{self.class.name}",
-                     "item_identifier=#{item_identifier}",
+                     "identifier=#{identifier}",
                      "usage_event_type=#{usage_event_type}",
                      "enabled=#{enabled}",
                      "" ] if verbose_debug
         return unless enabled
         return if skip_send?
-        @identifier = item_identifier
+        @identifier = identifier
         @usage_event_type = usage_event_type
         (request && ( filter_request?(request) || missing_server? || enqueue )) || display_warning
       end

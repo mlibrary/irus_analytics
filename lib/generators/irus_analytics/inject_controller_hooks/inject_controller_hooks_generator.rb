@@ -7,7 +7,7 @@ class IrusAnalytics::InjectControllerHooksGenerator < Rails::Generators::Base
   AFTER_ACTION_LABEL = 'IrusAnalytics after action'.freeze
   INCLUDE_IRUS_ANALYTICS_CODE = 'include IrusAnalytics::Controller::AnalyticsBehaviour'.freeze
   INCLUDE_IRUS_ANALYTICS_LABEL = 'include IrusAnalytics controller behavior'.freeze
-  ITEM_IDENTIFIER_METHOD_NAME = 'item_identifier'.freeze
+  ITEM_IDENTIFIER_METHOD_NAME = 'item_identifier_for_irus_analytics'.freeze
   SKIP_SEND_IRUS_ANALYTICS_METHOD_NAME = 'skip_send_irus_analytics?'.freeze
 
   VALID_TYPES = [ 'investigation', 'request' ].freeze
