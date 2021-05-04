@@ -129,10 +129,11 @@ module IrusAnalytics
         end
       end
 
-      def skip_send?
+      def skip_send?(usage_event_type)
         bold_debug [ here, called_from,
                      "self.class.name=#{self.class.name}",
                      "enable_skip_send_method=#{enable_skip_send_method}",
+                     "usage_event_type=#{usage_event_type}",
                      "" ] if verbose_debug
         return false unless enable_skip_send_method
         bold_debug [ here, called_from,
@@ -140,10 +141,10 @@ module IrusAnalytics
                      "respond_to?(:skip_send_irus_analytics?)=#{respond_to?(:skip_send_irus_analytics?)}",
                      "" ] if verbose_debug
         return false unless respond_to?(:skip_send_irus_analytics?)
-        rv = skip_send_irus_analytics?
+        rv = skip_send_irus_analytics?(usage_event_type)
         bold_debug [ here, called_from,
                      "self.class.name=#{self.class.name}",
-                     "skip_send_irus_analytics?=#{rv}",
+                     "skip_send_irus_analytics?(#{usage_event_type})=#{rv}",
                      "" ] if verbose_debug
         rv
       end
@@ -168,7 +169,7 @@ module IrusAnalytics
                      "enabled=#{enabled}",
                      "" ] if verbose_debug
         return unless enabled
-        return if skip_send?
+        return if skip_send?(usage_event_type)
         @identifier = identifier
         @usage_event_type = usage_event_type
         (request && ( filter_request?(request) || missing_server? || enqueue )) || display_warning

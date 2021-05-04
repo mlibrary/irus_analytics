@@ -174,9 +174,14 @@ class IrusAnalytics::InjectControllerHooksGenerator < Rails::Generators::Base
 
   def skip_send_irus_analytics_method
     <<-EOS
-    def #{SKIP_SEND_IRUS_ANALYTICS_METHOD_NAME}
+    def #{SKIP_SEND_IRUS_ANALYTICS_METHOD_NAME}(usage_event_type)
       # return true to skip tracking, for example to skip curation_concerns.visibility == 'private'
-      false
+      case usage_event_type
+      when '#{IrusAnalytics::INVESTIGATION}'
+        false
+      when '#{IrusAnalytics::REQUEST}'
+        false
+      end
     end
     EOS
   end
