@@ -14,7 +14,7 @@ class IrusAnalytics::ConfigGenerator < Rails::Generators::Base
   end
 
   def copy_irus_analytics_localization_en
-    copy file 'irus_analytics.en.yml', 'config/localizations/irus_analytics.en.yml'
+    copy_file 'irus_analytics.en.yml', 'config/locales/irus_analytics.en.yml'
   end
 
   private
