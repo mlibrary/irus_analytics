@@ -4,10 +4,13 @@ IrusAnalytics is a gem that provides a simple way to send analytics to the IRUS-
 
 More information about IRUS-UK can be found at [http://www.irus.mimas.ac.uk/](http://www.irus.mimas.ac.uk/). In summary the IRUS-UK service is designed to provide article-level usage statistics, both for Investigations (views) and Requests (downloads), for Institutional Repositories.  To sign up and use IRUS-UK, please see the above link. 
 
-This gem was developed for use with a Hydra repository [http://projecthydra.org/](http://projecthydra.org/), but it can be used with any other web application supporting Ruby gems. 
+This gem was developed for use with a Hyrax repository [http://samvera.org/](http://samvera.org/), but it can be used with any other web application supporting Ruby gems. 
 
 ## Build Status
 ![Build Status](https://api.travis-ci.org/uohull/irus_analytics.png?branch=master)
+## Prerequisite
+
+Blacklight OAI Provider
 
 ## Installation
 
