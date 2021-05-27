@@ -145,7 +145,8 @@ class IrusAnalytics::InjectControllerHooksGenerator < Rails::Generators::Base
     <<-EOS
     def #{ITEM_IDENTIFIER_METHOD_NAME}
       # return the OAI identifier
-      curation_concern.oai_identifier
+      # http://www.openarchives.org/OAI/2.0/guidelines-oai-identifier.htm
+      CatalogController.blacklight_config.oai[:provider][:record_prefix] + ":" + params[:id]
     end
     EOS
   end
