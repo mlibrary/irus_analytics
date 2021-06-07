@@ -3,6 +3,7 @@
 require 'openurl'
 require_relative './irus_analytics_logger'
 require 'irus_analytics/elements'
+require_relative '../openurl/transport_https'
 
 module IrusAnalytics
 
