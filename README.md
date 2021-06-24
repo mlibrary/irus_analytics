@@ -1,8 +1,8 @@
 # IrusAnalytics
 
-IrusAnalytics is a gem that provides a simple way to send analytics to the IRUS-UK repository aggregation service.  
+IrusAnalytics is a gem that provides a simple way to send analytics to the IRUS repository aggregation service.  
 
-More information about IRUS-UK can be found at [http://www.irus.mimas.ac.uk/](http://www.irus.mimas.ac.uk/). In summary the IRUS-UK service is designed to provide article-level usage statistics, both for Investigations (views) and Requests (downloads), for Institutional Repositories.  To sign up and use IRUS-UK, please see the above link. 
+More information about IRUS can be found at [https://irus.jisc.ac.uk/r5/](https://irus.jisc.ac.uk/r5/). In summary the IRUS service is designed to provide item-level usage statistics, both for Investigations (views) and Requests (downloads), for Institutional Repositories.  To sign up and use IRUS, please see the above link. 
 
 This gem was developed for use with a Hyrax repository [http://samvera.org/](http://samvera.org/), but it can be used with any other web application supporting Ruby gems. 
 
@@ -12,7 +12,7 @@ More information on COUNTER reports and reporting can be found at [Project COUNT
 ![Build Status](https://api.travis-ci.org/uohull/irus_analytics.png?branch=master)
 ## Prerequisite
 
-[Blacklight OAI Provider](https://github.com/projectblacklight/blacklight_oai_provider) or some other method of displaying an OAI feed of your works or digital objects. While the irus_analytics gem will push limited usage data to IRUS-UK, they still need a way to harvest your repository metadata (like Title, Author, etc) to create COUNTER usage reports.
+[Blacklight OAI Provider](https://github.com/projectblacklight/blacklight_oai_provider) or some other method of displaying an OAI feed of your works or digital objects. While the irus_analytics gem will push limited usage data to IRUS, they still need a way to harvest your repository metadata (like Title, Author, etc) to create COUNTER usage reports.
 
 ## Installation
 
@@ -48,7 +48,7 @@ This uses a similar mechanism to the standard rails database.yml file to allow f
  is used to configure the name of the source respository url (i.e. what the url for your repository)
 
 **irus_server_address**\
- is used to define the IRUS-UK server endpoint, this can be configured for the test version of the service.
+ is used to define the IRUS server endpoint, this can be configured for the test version of the service.
 
 **robots_file**\
 is used to specify the name of the file containing the robot UserAgents as regular expressions.  
@@ -223,7 +223,7 @@ Therefore in summary...
 
 NOTE: If you are not using the [Blacklight OAI Provider](https://github.com/projectblacklight/blacklight_oai_provider) gem to create your OAI feed, you'll need to modify the `item_identifier_for_irus_analytics` method to conform with your application's [OAI identifiers](http://www.openarchives.org/OAI/2.0/guidelines-oai-identifier.htm).
 
-To be compliant with the IRUS-UK client requirements/recommendations this Gem makes use of the Resque  [https://github.com/resque/resque](https://github.com/resque/resque).  Resque provides a simple way to create background jobs within your Ruby application, and is specifically used within this gem to push the analytics posts onto a queue.  This means the download functionality within your application is unaffected by the send analytics call, and it provides a means of queuing analytics if the IRUS-UK server is down. 
+To be compliant with the IRUS client requirements/recommendations this Gem makes use of the Resque  [https://github.com/resque/resque](https://github.com/resque/resque).  Resque provides a simple way to create background jobs within your Ruby application, and is specifically used within this gem to push the analytics posts onto a queue.  This means the download functionality within your application is unaffected by the send analytics call, and it provides a means of queuing analytics if the IRUS server is down. 
 
 Note: Resque requires Redis to be installed  
 
